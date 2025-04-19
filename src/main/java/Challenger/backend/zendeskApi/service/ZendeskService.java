@@ -28,8 +28,8 @@ public class ZendeskService {
 
     /**
      * Obtiene los comentarios de un ticket específico
-     * @param idTicket ID del ticket en Zendesk
-     * @return Objeto con la lista de comentarios y metadatos de paginación
+     * idTicket ID del ticket en Zendesk
+     * return Objeto con la lista de comentarios y metadatos de paginación
      */
     public commentsResponse obtenerComentariosTicket(Long idTicket) {
         String url = "https://" + subdominio + ".zendesk.com/api/v2/tickets/" + idTicket + "/comments.json";
