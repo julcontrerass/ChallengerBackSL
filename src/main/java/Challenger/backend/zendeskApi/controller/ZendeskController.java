@@ -1,7 +1,7 @@
 package Challenger.backend.zendeskApi.controller;
 
 import Challenger.backend.zendeskApi.dto.CommentRequest;
-import Challenger.backend.zendeskApi.model.commentsResponse;
+import Challenger.backend.zendeskApi.model.CommentsResponse;
 import Challenger.backend.zendeskApi.service.ZendeskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Controlador REST para gestionar las operaciones relacionadas con Zendesk
+ * Controlador REST para operaciones con Zendesk
  */
 @RestController
 @RequestMapping("/api/zendesk")
@@ -20,27 +20,22 @@ public class ZendeskController {
     private ZendeskService zendeskService;
 
     /**
-     * Endpoint para obtener los comentarios de un ticket específico
-     *  idTicket ID del ticket en Zendesk
-     * return Lista de comentarios en formato JSON
+     * Obtiene comentarios de un ticket
      */
-    @GetMapping("/tickets/{idTicket}/comments")
-    public ResponseEntity<commentsResponse> obtenerComentariosTicket(@PathVariable Long idTicket) {
-        commentsResponse comentarios = zendeskService.obtenerComentariosTicket(idTicket);
-        return ResponseEntity.ok(comentarios);
+    @GetMapping("/tickets/{ticketId}/comments")
+    public ResponseEntity<CommentsResponse> getTicketComments(@PathVariable Long ticketId) {
+        CommentsResponse comments = zendeskService.getTicketComments(ticketId);
+        return ResponseEntity.ok(comments);
     }
 
     /**
-     * Endpoint para agregar un nuevo comentario a un ticket existente
-     *  idTicket ID del ticket en Zendesk
-     * solicitudComentario Datos del comentario a agregar
-     * return Mensaje de confirmación
+     * Agrega un comentario a un ticket
      */
-    @PostMapping("/tickets/{idTicket}/comments")
-    public ResponseEntity<String> agregarComentarioATicket(
-            @PathVariable Long idTicket,
-            @RequestBody CommentRequest solicitudComentario) {
-        zendeskService.agregarComentarioATicket(idTicket, solicitudComentario);
+    @PostMapping("/tickets/{ticketId}/comments")
+    public ResponseEntity<String> addCommentToTicket(
+            @PathVariable Long ticketId,
+            @RequestBody CommentRequest commentRequest) {
+        zendeskService.addCommentToTicket(ticketId, commentRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body("Comentario agregado con éxito");
     }
 }

@@ -4,22 +4,22 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Modelo que representa un comentario de un ticket en Zendesk
+ * Modelo de comentario de ticket en Zendesk
  */
 public class comment {
     private Long id;
     @JsonProperty("body")
-    private String cuerpo;
+    private String body;
     @JsonProperty("html_body")
-    private String cuerpoHtml;
+    private String htmlBody;
     @JsonProperty("plain_body")
-    private String cuerpoPlano;
+    private String plainBody;
     @JsonProperty("public")
-    private boolean esPublico;
+    private boolean isPublic;
     @JsonProperty("author_id")
-    private Long idAutor;
+    private Long authorId;
     @JsonProperty("created_at")
-    private Date fechaCreacion;
+    private Date createdAt;
 
     // Getters y Setters
     public Long getId() {
@@ -30,51 +30,51 @@ public class comment {
         this.id = id;
     }
 
-    public String getCuerpo() {
-        return cuerpo;
+    public String getBody() {
+        return body;
     }
 
-    public void setCuerpo(String cuerpo) {
-        this.cuerpo = cuerpo;
+    public void setBody(String body) {
+        this.body = body;
     }
 
-    public String getCuerpoHtml() {
-        return cuerpoHtml;
+    public String getHtmlBody() {
+        return htmlBody;
     }
 
-    public void setCuerpoHtml(String cuerpoHtml) {
-        this.cuerpoHtml = cuerpoHtml;
+    public void setHtmlBody(String htmlBody) {
+        this.htmlBody = htmlBody;
     }
 
-    public String getCuerpoPlano() {
-        return cuerpoPlano;
+    public String getPlainBody() {
+        return plainBody;
     }
 
-    public void setCuerpoPlano(String cuerpoPlano) {
-        this.cuerpoPlano = cuerpoPlano;
+    public void setPlainBody(String plainBody) {
+        this.plainBody = plainBody;
     }
 
-    public boolean isEsPublico() {
-        return esPublico;
+    public boolean isPublic() {
+        return isPublic;
     }
 
-    public void setEsPublico(boolean esPublico) {
-        this.esPublico = esPublico;
+    public void setPublic(boolean isPublic) {
+        this.isPublic = isPublic;
     }
 
-    public Long getIdAutor() {
-        return idAutor;
+    public Long getAuthorId() {
+        return authorId;
     }
 
-    public void setIdAutor(Long idAutor) {
-        this.idAutor = idAutor;
+    public void setAuthorId(Long authorId) {
+        this.authorId = authorId;
     }
 
-    public Date getFechaCreacion() {
-        return fechaCreacion;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setFechaCreacion(Date fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }

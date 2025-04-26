@@ -1,7 +1,7 @@
 package Challenger.backend.zendeskApi.service;
 
 import Challenger.backend.zendeskApi.dto.CommentRequest;
-import Challenger.backend.zendeskApi.model.commentsResponse;
+import Challenger.backend.zendeskApi.model.CommentsResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -12,13 +12,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Servicio para interactuar con la API de Zendesk
+ * Servicio para API de Zendesk
  */
 @Service
 public class ZendeskService {
 
     @Value("${zendesk.subdomain}")
-    private String subdominio;
+    private String subdomain;
 
     @Value("${zendesk.token}")
     private String token;
@@ -27,72 +27,67 @@ public class ZendeskService {
     private String email;
 
     /**
-     * Obtiene los comentarios de un ticket específico
-     * idTicket ID del ticket en Zendesk
-     * return Objeto con la lista de comentarios y metadatos de paginación
+     * Obtiene comentarios de un ticket
      */
-    public commentsResponse obtenerComentariosTicket(Long idTicket) {
-        String url = "https://" + subdominio + ".zendesk.com/api/v2/tickets/" + idTicket + "/comments.json";
+    public CommentsResponse getTicketComments(Long ticketId) {
+        String url = "https://" + subdomain + ".zendesk.com/api/v2/tickets/" + ticketId + "/comments.json";
 
-        HttpHeaders cabeceras = new HttpHeaders();
-        cabeceras.set("Authorization", "Basic " + codificarAutenticacion());
-        cabeceras.setContentType(MediaType.APPLICATION_JSON);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Basic " + encodeAuthentication());
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<String> entidad = new HttpEntity<>(cabeceras);
-        RestTemplate clienteRest = new RestTemplate();
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        RestTemplate restClient = new RestTemplate();
 
         try {
-            ResponseEntity<commentsResponse> respuesta = clienteRest.exchange(
+            ResponseEntity<CommentsResponse> response = restClient.exchange(
                     url,
                     HttpMethod.GET,
-                    entidad,
-                    commentsResponse.class
+                    entity,
+                    CommentsResponse.class
             );
-            return respuesta.getBody();
+            return response.getBody();
         } catch (HttpClientErrorException e) {
-            throw new RuntimeException("Error al obtener comentarios del ticket ID: " + idTicket + " - " + e.getMessage());
+            throw new RuntimeException("Error al obtener comentarios del ticket ID: " + ticketId + " - " + e.getMessage());
         }
     }
 
     /**
-     * Agrega un nuevo comentario a un ticket existente
-     *  idTicket ID del ticket en Zendesk
-     *  solicitudComentario Datos del comentario a agregar
+     * Agrega comentario a un ticket existente
      */
-    public void agregarComentarioATicket(Long idTicket, CommentRequest solicitudComentario) {
-        String url = "https://" + subdominio + ".zendesk.com/api/v2/tickets/" + idTicket + ".json";
+    public void addCommentToTicket(Long ticketId, CommentRequest commentRequest) {
+        String url = "https://" + subdomain + ".zendesk.com/api/v2/tickets/" + ticketId + ".json";
 
-        HttpHeaders cabeceras = new HttpHeaders();
-        cabeceras.set("Authorization", "Basic " + codificarAutenticacion());
-        cabeceras.setContentType(MediaType.APPLICATION_JSON);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Basic " + encodeAuthentication());
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-        // Crear estructura de datos para la solicitud según la API de Zendesk
-        Map<String, Object> comentario = new HashMap<>();
-        comentario.put("body", solicitudComentario.getBody());
-        comentario.put("public", true);
+        // Crear estructura para la solicitud
+        Map<String, Object> comment = new HashMap<>();
+        comment.put("body", commentRequest.getBody());
+        comment.put("public", true);
 
         Map<String, Object> ticket = new HashMap<>();
-        ticket.put("comment", comentario);
+        ticket.put("comment", comment);
 
-        Map<String, Object> cargaUtil = new HashMap<>();
-        cargaUtil.put("ticket", ticket);
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("ticket", ticket);
 
-        HttpEntity<Map<String, Object>> entidad = new HttpEntity<>(cargaUtil, cabeceras);
-        RestTemplate clienteRest = new RestTemplate();
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(payload, headers);
+        RestTemplate restClient = new RestTemplate();
 
         try {
-            clienteRest.exchange(url, HttpMethod.PUT, entidad, String.class);
+            restClient.exchange(url, HttpMethod.PUT, entity, String.class);
         } catch (HttpClientErrorException e) {
-            throw new RuntimeException("Error al agregar comentario al ticket ID: " + idTicket + " - " + e.getMessage());
+            throw new RuntimeException("Error al agregar comentario al ticket ID: " + ticketId + " - " + e.getMessage());
         }
     }
 
     /**
-     * Codifica las credenciales para la autenticación con Zendesk
-     * return Credenciales codificadas en Base64
+     * Codifica credenciales para autenticación
      */
-    private String codificarAutenticacion() {
-        String autenticacion = email + "/token:" + token;
-        return java.util.Base64.getEncoder().encodeToString(autenticacion.getBytes());
+    private String encodeAuthentication() {
+        String authentication = email + "/token:" + token;
+        return java.util.Base64.getEncoder().encodeToString(authentication.getBytes());
     }
 }

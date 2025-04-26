@@ -4,14 +4,14 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Modelo para la respuesta de la API que contiene la lista de comentarios
+ * Respuesta con lista de comentarios y paginación
  */
-public class commentsResponse {
+public class CommentsResponse {
     private List<comment> comments;
     @JsonProperty("next_page")
-    private String paginaSiguiente;
+    private String nextPage;
     @JsonProperty("previous_page")
-    private String paginaAnterior;
+    private String previousPage;
     private Long count;
 
     // Getters y Setters
@@ -23,20 +23,20 @@ public class commentsResponse {
         this.comments = comments;
     }
 
-    public String getPaginaSiguiente() {
-        return paginaSiguiente;
+    public String getNextPage() {
+        return nextPage;
     }
 
-    public void setPaginaSiguiente(String paginaSiguiente) {
-        this.paginaSiguiente = paginaSiguiente;
+    public void setNextPage(String nextPage) {
+        this.nextPage = nextPage;
     }
 
-    public String getPaginaAnterior() {
-        return paginaAnterior;
+    public String getPreviousPage() {
+        return previousPage;
     }
 
-    public void setPaginaAnterior(String paginaAnterior) {
-        this.paginaAnterior = paginaAnterior;
+    public void setPreviousPage(String previousPage) {
+        this.previousPage = previousPage;
     }
 
     public Long getCount() {
